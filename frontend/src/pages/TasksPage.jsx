@@ -1,16 +1,44 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { sampleTasks } from '@/services/mockData';
-import { Plus, CheckSquare, Clock, AlertCircle, Calendar } from 'lucide-react';
+import { Plus, CheckSquare, Clock, AlertCircle, Calendar, Search } from 'lucide-react';
 
 const TasksPage = () => {
   const [tasks] = useState(sampleTasks);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedPriority, setSelectedPriority] = useState('all');
+  const [sortBy, setSortBy] = useState('dueDate');
 
-  const pendingTasks = tasks.filter(task => task.status === 'pending');
-  const inProgressTasks = tasks.filter(task => task.status === 'in-progress');
-  const completedTasks = tasks.filter(task => task.status === 'completed');
+  // Filter and sort tasks
+  const filteredTasks = tasks.filter(task => {
+    const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         task.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesPriority = selectedPriority === 'all' || task.priority === selectedPriority;
+    
+    return matchesSearch && matchesPriority;
+  }).sort((a, b) => {
+    switch (sortBy) {
+      case 'dueDate': {
+        return new Date(a.dueDate) - new Date(b.dueDate);
+      }
+      case 'priority': {
+        const priorityOrder = { high: 3, medium: 2, low: 1 };
+        return priorityOrder[b.priority] - priorityOrder[a.priority];
+      }
+      case 'title': {
+        return a.title.localeCompare(b.title);
+      }
+      default:
+        return 0;
+    }
+  });
+
+  const pendingTasks = filteredTasks.filter(task => task.status === 'pending');
+  const inProgressTasks = filteredTasks.filter(task => task.status === 'in-progress');
+  const completedTasks = filteredTasks.filter(task => task.status === 'completed');
 
   const getPriorityColor = (priority) => {
     switch (priority) {
@@ -91,6 +119,46 @@ const TasksPage = () => {
         </Button>
       </div>
 
+      {/* Search and Filters */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search tasks..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <select
+                value={selectedPriority}
+                onChange={(e) => setSelectedPriority(e.target.value)}
+                className="px-3 py-2 border border-input rounded-md bg-background text-sm"
+              >
+                <option value="all">All Priorities</option>
+                <option value="high">High Priority</option>
+                <option value="medium">Medium Priority</option>
+                <option value="low">Low Priority</option>
+              </select>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="px-3 py-2 border border-input rounded-md bg-background text-sm"
+              >
+                <option value="dueDate">Sort by Due Date</option>
+                <option value="priority">Sort by Priority</option>
+                <option value="title">Sort by Title</option>
+              </select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
@@ -99,7 +167,10 @@ const TasksPage = () => {
             <CheckSquare className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{tasks.length}</div>
+            <div className="text-2xl font-bold">{filteredTasks.length}</div>
+            <p className="text-xs text-muted-foreground">
+              {searchTerm || selectedPriority !== 'all' ? 'filtered' : 'total'}
+            </p>
           </CardContent>
         </Card>
 
@@ -156,7 +227,9 @@ const TasksPage = () => {
           </div>
           {pendingTasks.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
-              No pending tasks. Great job!
+              {searchTerm || selectedPriority !== 'all' 
+                ? 'No pending tasks match your filters.' 
+                : 'No pending tasks. Great job!'}
             </div>
           )}
         </TabsContent>
@@ -169,7 +242,9 @@ const TasksPage = () => {
           </div>
           {inProgressTasks.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
-              No tasks in progress. Start working on some pending tasks!
+              {searchTerm || selectedPriority !== 'all' 
+                ? 'No in-progress tasks match your filters.' 
+                : 'No tasks in progress. Start working on some pending tasks!'}
             </div>
           )}
         </TabsContent>
@@ -182,11 +257,39 @@ const TasksPage = () => {
           </div>
           {completedTasks.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
-              No completed tasks yet. Keep working!
+              {searchTerm || selectedPriority !== 'all' 
+                ? 'No completed tasks match your filters.' 
+                : 'No completed tasks yet. Keep working!'}
             </div>
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Bulk Actions */}
+      {filteredTasks.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Bulk Actions</CardTitle>
+            <CardDescription>Perform actions on multiple tasks</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" size="sm">
+                Mark All Pending as In Progress
+              </Button>
+              <Button variant="outline" size="sm">
+                Complete All In Progress
+              </Button>
+              <Button variant="outline" size="sm">
+                Export Task List
+              </Button>
+              <Button variant="outline" size="sm">
+                Delete Completed Tasks
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
