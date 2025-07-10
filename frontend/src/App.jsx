@@ -9,6 +9,7 @@ import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./pages/ProfilePage";
 import GoalsPage from "./pages/GoalsPage";
+import TasksPage from "./pages/TasksPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -42,10 +43,7 @@ function App() {
               path="/tasks"
               element={
                 <ProtectedRoute>
-                  <div className="text-center">
-                    <h1 className="text-2xl font-bold">Tasks</h1>
-                    <p className="text-muted-foreground">Coming soon...</p>
-                  </div>
+                  <TasksPage />
                 </ProtectedRoute>
               }
             />
