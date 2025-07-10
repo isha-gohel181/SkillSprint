@@ -12,10 +12,12 @@
   "description": "",
   "dependencies": {
     "@clerk/express": "^1.7.5",
+    "@google/generative-ai": "^0.24.1",
     "cors": "^2.8.5",
     "dotenv": "^17.1.0",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
+    "joi": "^17.13.3",
     "mongoose": "^8.16.2",
     "morgan": "^1.10.0",
     "svix": "^1.69.0"
