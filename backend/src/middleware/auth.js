@@ -1,6 +1,7 @@
+// backend/src/middleware/auth.js
 const { requireAuth } = require("@clerk/express");
 
-// Middleware to get user info (optional use)
+// Optional middleware to get user info
 const getUser = (req, res, next) => {
   try {
     // If authenticated, req.auth contains user data

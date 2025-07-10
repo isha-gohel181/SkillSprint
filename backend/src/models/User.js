@@ -55,8 +55,8 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Index for better query performance
-userSchema.index({ clerkId: 1 });
-userSchema.index({ email: 1 });
+// // Index for better query performance
+// userSchema.index({ clerkId: 1 });
+// userSchema.index({ email: 1 });
 
 module.exports = mongoose.model("User", userSchema);

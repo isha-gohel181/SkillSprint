@@ -9,6 +9,10 @@ require("dotenv").config();
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const webhookRoutes = require("./routes/webhooks");
+const goalRoutes = require("./routes/goals");
+const taskRoutes = require("./routes/tasks");
+const progressRoutes = require("./routes/progress");
+const aiRoutes = require("./routes/ai");
 
 const app = express();
 
@@ -39,6 +43,10 @@ mongoose
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/goals", goalRoutes);
+app.use("/api/tasks", taskRoutes);
+app.use("/api/progress", progressRoutes);
+app.use("/api/ai", aiRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
@@ -46,6 +54,12 @@ app.get("/api/health", (req, res) => {
     status: "OK",
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || "development",
+    features: {
+      goals: true,
+      tasks: true,
+      progress: true,
+      ai: !!process.env.GEMINI_API_KEY,
+    },
   });
 });
 
@@ -53,6 +67,7 @@ app.get("/api/health", (req, res) => {
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
+    success: false,
     error: "Something went wrong!",
     message:
       process.env.NODE_ENV === "development"
@@ -63,7 +78,10 @@ app.use((err, req, res, next) => {
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).json({ error: "Route not found" });
+  res.status(404).json({
+    success: false,
+    error: "Route not found",
+  });
 });
 
 const PORT = process.env.PORT || 5000;
@@ -71,4 +89,11 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
+  console.log(
+    `AI Features: ${
+      process.env.GEMINI_API_KEY
+        ? "Enabled"
+        : "Disabled (Add GEMINI_API_KEY to enable)"
+    }`
+  );
 });
