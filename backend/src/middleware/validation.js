@@ -88,7 +88,7 @@ const createQuizSchema = Joi.object({
       type: Joi.string().valid('multiple-choice', 'true-false', 'fill-in-blank', 'essay').required(),
       options: Joi.array().items(Joi.string().min(1).max(200)).when('type', {
         is: 'multiple-choice',
-        then: Joi.required().min(2).max(6),
+        then: Joi.array().items(Joi.string().min(1).max(200)).min(2).max(6).required(),
         otherwise: Joi.optional()
       }),
       correctAnswer: Joi.alternatives().try(
