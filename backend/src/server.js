@@ -9,6 +9,11 @@ require("dotenv").config();
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const webhookRoutes = require("./routes/webhooks");
+const goalRoutes = require("./routes/goals");
+const taskRoutes = require("./routes/tasks");
+const progressRoutes = require("./routes/progress");
+const aiRoutes = require("./routes/ai");
+const quizRoutes = require("./routes/quizzes");
 
 const app = express();
 
@@ -39,6 +44,11 @@ mongoose
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/goals", goalRoutes);
+app.use("/api/tasks", taskRoutes);
+app.use("/api/progress", progressRoutes);
+app.use("/api/ai", aiRoutes);
+app.use("/api/quizzes", quizRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
