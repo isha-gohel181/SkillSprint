@@ -1,13 +1,14 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "sonner";
 
 // Import components
 import Header from "./components/Header";
 import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./pages/ProfilePage";
+import GoalsPage from "./pages/GoalsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -26,6 +27,36 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/goals"
+              element={
+                <ProtectedRoute>
+                  <GoalsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tasks"
+              element={
+                <ProtectedRoute>
+                  <div className="text-center">
+                    <h1 className="text-2xl font-bold">Tasks</h1>
+                    <p className="text-muted-foreground">Coming soon...</p>
+                  </div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/progress"
+              element={
+                <ProtectedRoute>
+                  <div className="text-center">
+                    <h1 className="text-2xl font-bold">Progress</h1>
+                    <p className="text-muted-foreground">Coming soon...</p>
+                  </div>
                 </ProtectedRoute>
               }
             />
