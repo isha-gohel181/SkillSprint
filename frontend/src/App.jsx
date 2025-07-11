@@ -9,6 +9,8 @@ import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
 import GoalsPage from "./pages/GoalsPage";
 import TasksPage from "./pages/TasksPage";
+import ProgressPage from "./pages/ProgressPage";
+import QuizPage from "./pages/QuizPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ErrorBoundary from "./components/common/ErrorBoundary";
@@ -46,6 +48,22 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <TasksPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/progress"
+                element={
+                  <ProtectedRoute>
+                    <ProgressPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/quiz"
+                element={
+                  <ProtectedRoute>
+                    <QuizPage />
                   </ProtectedRoute>
                 }
               />

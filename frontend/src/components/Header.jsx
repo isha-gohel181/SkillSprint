@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { SignedIn, SignedOut, UserButton, SignInButton } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
-import { Target, Calendar, TrendingUp } from "lucide-react";
+import { Target, Calendar, TrendingUp, Brain } from "lucide-react";
 
 const Header = () => {
   return (
@@ -32,6 +32,18 @@ const Header = () => {
               <Button variant="ghost" className="flex items-center space-x-1">
                 <Calendar className="h-4 w-4" />
                 <span>Tasks</span>
+              </Button>
+            </Link>
+            <Link to="/progress">
+              <Button variant="ghost" className="flex items-center space-x-1">
+                <TrendingUp className="h-4 w-4" />
+                <span>Progress</span>
+              </Button>
+            </Link>
+            <Link to="/quiz">
+              <Button variant="ghost" className="flex items-center space-x-1">
+                <Brain className="h-4 w-4" />
+                <span>Quiz</span>
               </Button>
             </Link>
             <Link to="/profile">
